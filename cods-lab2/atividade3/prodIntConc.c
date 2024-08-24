@@ -56,6 +56,20 @@ double *produtoInterno(void* t_id){
     pthread_exit((void*) retorno);
 }
 
+/**
+* @brief Função que calcula a variação entre os 2 produtos internos, usando o sequencial
+* de referência.
+* @param prodIntSeq Produto interno calculado sequencialmente
+* @param prodIntCon Produto interno calculado concorrentemente
+* @return Retorna a variação relativa calculada.
+*/
+double calculaErro(double prodIntSeq, double prodIntCon){
+    double erro;
+
+    erro = abs((prodIntSeq - prodIntCon)/prodIntSeq);
+    return erro;
+}
+
 int main(int arc, char* argv[]){
     long int i;
     double prodIntSeq; //Produto interno calculado sequencialmente
@@ -142,6 +156,7 @@ int main(int arc, char* argv[]){
      return 7;
     }
 
+    //Calcula a variação entre os 2 produtos internos e printa na tela
     erro = calculaErro(prodIntSeq,prodIntCon);
     printf("Produto interno sequencial: %f\nProduto interno concorrente: %f\nErro(sequencial como base): %f\n", prodIntSeq,prodIntCon,erro);
     
