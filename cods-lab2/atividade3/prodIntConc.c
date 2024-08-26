@@ -22,23 +22,23 @@ v_c: valor do programa concorrente e v_s: valor do programa sequencial).
 //Variáveis globais
 int T; //Número de threads
 long int N; //Tamanho dos vetores
-float* vetor1, vetor2; /*vetor de elementos*/
+float *vetor1, *vetor2; /*vetor de elementos*/
 
 /**
 * @brief Função que calcula o produto interno de parte dos vetores.
 * @param t_id Identificador da thread
 * @return Retorna o produto interno calculado.
 */
-double *produtoInterno(void* t_id){
+void *produtoInterno(void* t_id){
     long int threadId = (long int) t_id; //ID da thread
-    int parte, inicio, fim; //Variável da parte a ser calculada
+    int i, parte, inicio, fim; //Variável da parte a ser calculada
     double prodInt=0; //Produto interno da parte
     double* retorno; //Ponteiro para o retorno
     
     //Prepara a parte, de modo que cada thread trabalhe balanceadamente
     parte = N/T;
     inicio = threadId * parte;
-    if(id==(T-1)){
+    if(threadId==(T-1)){
         fim = N;
     } else{
         fim = inicio + parte;
@@ -70,7 +70,7 @@ double calculaErro(double prodIntSeq, double prodIntCon){
     return erro;
 }
 
-int main(int arc, char* argv[]){
+int main(int argc, char* argv[]){
     long int i;
     double prodIntSeq; //Produto interno calculado sequencialmente
     double prodIntCon=0; //Produto interno calculado concorrentemente
@@ -124,7 +124,7 @@ int main(int arc, char* argv[]){
     }
 
     //Limita o número de threads ao tamanho dos vetores
-    T>N? T = N : ;
+    T>N? T = N : T;
 
     //Aloca espaço para o vetor de ids das threads e confere o resultado
     threads = (pthread_t *) malloc(T* sizeof(pthread_t));
