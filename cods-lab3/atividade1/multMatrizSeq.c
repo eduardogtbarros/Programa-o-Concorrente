@@ -2,16 +2,54 @@
    Profa.: Silvana Rossetto
    Laboratório: 3
    Autor: Eduardo Barros
+
+   Projete uma solução sequencial para o problema de
+   multiplicação de matrizes.
+   As matrizes de entrada e saída serão do tipo float, com N 
+   linhas e M colunas.
+   As matrizes de entrada devem ser carregadas de arquivos 
+   binários previamente gerados, onde os dois primeiros valores
+   (do tipo inteiro) indicam as dimensões da matriz (N e M), e
+   os demais elementos (do tipo float) sao a sequência de 
+   valores da matriz.
+   As matrizes deverão ser representadas internamente como 
+   vetores de float (variável do tipo ponteiro, alocada 
+   dinamicamente).
+   A matriz de saída devera ser escrita em um arquivo binário,
+   no mesmo formato dos arquivos de entrada.
+   O programa devera receber como entrada, na linha de comando,
+   os nomes dos arquivos de entrada e de saída.
+   O programa deverá incluir chamadas de tomada de tempo de
+   execução interna do programa, separando as partes de
+   inicialização, processamento e finalização do programa.
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include "timer.h"
 
-int main(int argc, char* argv[]){
+float *saida; //matriz de saída
+
+/**
+* @brief Função que calcula a multiplicação das matrizes.
+* @param linhas Quantidade de linhas da matriz
+* @param colunas Quantidade de colunas da matriz
+* @param matriz1 1ª matriz de entrada
+* @param matriz2 2ª matriz de entrada
+* @return Retorna a multiplicação salva em outra matriz.
+*/
+void multMatrizes(int linhas, int colunas, float* matriz1, float* matriz2){
     int i,j;//auxiliares de iteração
+    //Faz a multiplicação das matrizes e salva na matriz de saída
+    for(i=0;i<linhas;i++){
+        for(j=0; j<colunas; j++){
+            saida[i*colunas+j] = matriz1[i*colunas+j] * matriz2[i*colunas+j];
+        }
+    }
+}
+
+int main(int argc, char* argv[]){
     int N,M, total; //dimensões da matriz
     float *matriz1, *matriz2; //matrizes de entrada
-    float *saida; //matriz de saída
     double inicio, fim, delta;
     FILE *arquivoEntrada, *arquivoSaida;
     size_t retorno;
@@ -78,12 +116,9 @@ int main(int argc, char* argv[]){
     printf("Tempo para inicialização: %lf\n", delta);
 
     GET_TIME(inicio);
-    //Faz a multiplicação das matrizes e salva na matriz de saída
-    for(i=0;i<N;i++){
-        for(j=0; j<M; j++){
-            saida[i*M+j] = matriz1[i*M+j] * matriz2[i*M+j];
-        }
-    }
+
+    //chamada da função que calcula a multiplicação de matrizes
+    multMatrizes(N,M,matriz1,matriz2);
 
     //abre o arquivo de saída
     arquivoSaida = fopen(argv[2], "wb");
