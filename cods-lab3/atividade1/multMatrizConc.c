@@ -70,8 +70,9 @@ void *multMatrizes(void* arg){
 
 int main(int argc, char* argv[]){
     int i; //auxiliar de iteração
-    int N,M, total; //dimensões da matriz
+    long int N,M, total; //dimensões da matriz
     double inicio, fim, delta;
+    Args* args;
     FILE *arquivoEntrada, *arquivoSaida;
     size_t retorno;
     pthread_t* threads;
@@ -106,7 +107,6 @@ int main(int argc, char* argv[]){
 
     //Calcula o tamanho total das matrizes
     total = N*M;
-
     //Recebe o número de threads e o limita ao tamanho da matriz
     nthreads = atoi(argv[3]);
     if(nthreads > total) nthreads = total;
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
     matriz1 = (float *)malloc(total*sizeof(float));
     matriz2 = (float *)malloc(total*sizeof(float));
     if(!matriz1 || !matriz2){
-        fprintf(stderr, "Erro ao alocar vetores.\n");
+        fprintf(stderr, "Erro ao alocar matrizes.\n");
         return 4;
     }
 
@@ -168,7 +168,7 @@ int main(int argc, char* argv[]){
     }
 
     //Aguarda o término das threads
-    for(i=0;i<nthreads;i++) pthread_join(*(&threads[i]));
+    for(i=0;i<nthreads;i++) pthread_join(*(&threads[i]),NULL);
 
     //abre o arquivo de saída
     arquivoSaida = fopen(argv[2], "wb");
@@ -200,6 +200,7 @@ int main(int argc, char* argv[]){
     GET_TIME(fim);
     delta = fim - inicio;
     printf("Tempo para finalizacao: %lf\n", delta);
+    printf("\n");
 
     return 0;
 }

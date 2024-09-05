@@ -48,7 +48,7 @@ void multMatrizes(int linhas, int colunas, float* matriz1, float* matriz2){
 }
 
 int main(int argc, char* argv[]){
-    int N,M, total; //dimensões da matriz
+    long int N,M, total; //dimensões da matriz
     float *matriz1, *matriz2; //matrizes de entrada
     double inicio, fim, delta;
     FILE *arquivoEntrada, *arquivoSaida;
