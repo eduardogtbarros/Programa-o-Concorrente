@@ -23,7 +23,7 @@ pthread_mutex_t mutex; //variavel de lock para exclusao mutua
 * @param arg Número da thread passado como argumento
 * @return Retorna a aproximação de π calculada calculado.
 */
-double *calculaPi(void* arg){
+void *calculaPi(void* arg){
     long int t_id = (long int) arg;
     int i; //variavel auxiliar de iteração
     int parte, inicio, fim; //Variável da parte a ser calculada
@@ -42,16 +42,16 @@ double *calculaPi(void* arg){
         //Entra na seção crítica
         pthread_mutex_lock(&mutex);
         //Calcula o pi daquela parte
-        pi+= (1.0/(pow(16.0,i)))*((4.0/(8.0*i+1.0))-(2.0/(8.0*i+4.0))-(1.0/(8.0*i+5.0))-(1.0/(8.0*i+6.0)));
+        pi+= (1.0/(pow(16.0,(double)i)))*((4.0/(8.0*i+1.0))-(2.0/(8.0*i+4.0))-(1.0/(8.0*i+5.0))-(1.0/(8.0*i+6.0)));
         //Sai da seção crítica
         pthread_mutex_unlock(&mutex);
     }
 
-    return pi;
+    pthread_exit(NULL);
 }
 
 int main(int argc, char *argv[]) {
-    int i; //variável auxiliar de iteração
+    long int i; //variável auxiliar de iteração
     pthread_t* threads;
 
     //Confere se todos os argumentos foram passados
