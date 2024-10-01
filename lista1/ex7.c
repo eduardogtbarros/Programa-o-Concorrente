@@ -87,6 +87,7 @@ int main(int argc, char *argv[]){
     int produtores, consumidores;
     int* retorno;
     pthread_t *t_prod, *t_cons;
+    
     srand(time(NULL));
 
     if(argc<3){
@@ -101,6 +102,10 @@ int main(int argc, char *argv[]){
     t_prod = malloc(sizeof(pthread_t)*produtores);
     t_cons = malloc(sizeof(pthread_t)*consumidores);
 
+    pthread_mutex_init(&mutex,NULL);
+    pthread_cond_init(&cond_prod,NULL);
+    pthread_cond_init(&cond_cons,NULL);
+    
     for(i=0;i<produtores;i++){
         if(pthread_create(&t_prod[i], NULL, insere, NULL)){
             printf("Erro ao criar thread."); exit(-1);
@@ -124,6 +129,9 @@ int main(int argc, char *argv[]){
         printf("Consumido: %d\n",*retorno);
     }
     
+    pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&cond_prod);
+    pthread_cond_destroy(&cond_cons);
     free(t_prod);
     free(t_cons);
     return 0;
