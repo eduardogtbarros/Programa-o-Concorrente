@@ -74,7 +74,7 @@ void write_unlock(){
 }
 
 /**
-* @brief 
+* @brief Realiza as tarefas de consulta, inserção e remoção
 * @param arg Número da thread passado como argumento
 * @return 
 */
