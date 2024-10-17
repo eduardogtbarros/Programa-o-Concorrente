@@ -17,3 +17,5 @@
 /cods-lab6/main_lock.c
 /cods-lab6/error-main.c
 /cods-lab6/main_rwlock.c
+/cods-lab7/semaf-1.c
+/cods-lab7/semaf-2.c
