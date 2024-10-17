@@ -8,23 +8,33 @@
 
 FILE* arquivoEntrada;
 char[N] buffer1;
-
-sem
+sem_t cheio;
 
 void* t1(void* arg){
-    retorno = fread(&buffer1, sizeof(char), N, arquivoEntrada);
-    if(!retorno) {
-    fprintf(stderr, "Erro ao ler tamanho dos vetores.\n");
-    return 1;
+    while(!feof(arquivoEntrada)){
+        sem_wait(&cheio);
+        retorno = fread(&buffer1, sizeof(char), N, arquivoEntrada);
+    
+        if(!retorno) {
+            fprintf(stderr, "Erro ao ler tamanho dos vetores.\n");
+            return 1;
+        }
+        sem_post(&cheio);
     }
+
+    pthread_exit(NULL);
 }
 
 void* t2(void* arg){
+
+    pthread_exit(NULL);
 
 }
 
 void* t3(void* arg){
 
+
+    pthread_exit(NULL);
 }
 
 int main(int argc, char* argv[]){
@@ -39,7 +49,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
-    // sem_init(&estado1, 0, 0);
+    sem_init(&cheio, 0, 0);
     // sem_init(&estado2, 0, 0);
 
     return 0;
