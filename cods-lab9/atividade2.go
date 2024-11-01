@@ -13,7 +13,6 @@
    Main imprime: finalizando
 */
 
-//introduz canais na aplicação Go
 package main
 
 import (

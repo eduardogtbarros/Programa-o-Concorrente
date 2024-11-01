@@ -23,18 +23,75 @@
 */
 
 package main
-import "fmt"
+import (
+		"fmt"
+		"math"
+		"sync"
+	)
 
-func ehPrimo (n long long){
+//Função que testa se o número recebido é primo
+func ehPrimo (n int) bool{
 	if n<=1 {return false}
 	if n==2 {return true}
 	if n%2==0 {return false}
-	for i:=0; i<sqrt(n)+1; i+=2{
+	for i:=3; i<int(math.Sqrt(float64(n)))+1; i+=2{
 		if n%i==0 {return false}
 	}
 	return true
 }
 
-func main(){
+//Função executada pelas goroutines para checar a primalidade dos números recebidos
+func verificaPrimos (numeros <- chan int, resultados chan <- int, wg *sync.WaitGroup){
+	//Indica o término da goroutine para o WaitGroup
+	defer wg.Done()
+	
+	//Envia 1 para o canal de resultados se n for primo
+	for n := range numeros{
+		if ehPrimo(n){
+			resultados <- 1
+		}
+	}
+}
 
+func main(){
+	N := 100 //quantidade de números
+	T := 5 //quantidade de goroutines
+
+	//Cria o canal de números e de resultados
+	numeros := make(chan int, N)
+	resultados := make(chan int, N)
+
+	//Cria um WaitGroup para a sincronização das goroutines
+	var wg sync.WaitGroup
+
+	//Envia T goroutines
+	for i:=0; i<T; i++{
+		wg.Add(1)
+		go verificaPrimos(numeros, resultados, &wg)
+	}
+
+	//Envia os números de 1 a N para o canal numeros
+	go func(){
+		for i:= 1; i<=N; i++{
+			numeros <- i
+		}
+		//Fecha o canal depois de enviar todos
+		close(numeros)
+	}()
+
+	//Goroutine para fechar o canal de resultados
+	go func(){
+		//Espera o término de todas as goroutines
+		wg.Wait()
+		//Fecha o canal de resultados
+		close(resultados)
+	}()
+
+	//Conta o total de primos
+	primos := 0
+	for i:= 0; i<N; i++{
+		primos += <- resultados
+	}
+
+	fmt.Printf("Número de primos de 1 até %d: %d.\n", N, primos)
 }
